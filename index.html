@@ -1,1 +1,277 @@
-<h1>Carlos Ali</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C:\> MANUAL_DE_C.EXE</title>
+    <style>
+        :root {
+            --bg-color: #050505;
+            --term-green: #33ff00;
+            --term-green-dim: #1a8000;
+            --term-glow: text-shadow: 0 0 2px #33ff00, 0 0 10px #33ff00;
+            --scan-line-color: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--term-green);
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 16px;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Efecto CRT de parpadeo y brillo */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+        
+        /* Efecto de curvatura y viñeta de monitor viejo */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .terminal-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            padding-bottom: 50px;
+        }
+
+        h1, h2, h3 {
+            text-transform: uppercase;
+            font-weight: bold;
+            text-shadow: 0 0 5px var(--term-green);
+            border-bottom: 2px solid var(--term-green);
+            padding-bottom: 5px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 4px double var(--term-green);
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* Bloques de código */
+        .code-block {
+            border: 1px dashed var(--term-green);
+            padding: 15px;
+            margin: 20px 0;
+            background-color: rgba(0, 255, 0, 0.05);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            display: block;
+            overflow-x: auto;
+        }
+
+        .comment {
+            color: var(--term-green-dim);
+            font-style: italic;
+        }
+
+        /* Listas estilo DOS */
+        ul {
+            list-style-type: none;
+            margin-left: 20px;
+        }
+
+        ul li::before {
+            content: ">";
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Cursor parpadeante */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--term-green);
+            animation: blink 1s step-end infinite;
+            vertical-align: bottom;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Animación de carga inicial */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: fadeOut 0.5s ease-out 3s forwards;
+        }
+
+        .loading-text::after {
+            content: "";
+            animation: dots 2s infinite;
+        }
+
+        @keyframes dots {
+            0% { content: ""; }
+            33% { content: "."; }
+            66% { content: ".."; }
+            100% { content: "..."; }
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* Links retro */
+        a {
+            color: var(--term-green);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--term-green);
+            cursor: pointer;
+        }
+        
+        a:hover {
+            background-color: var(--term-green);
+            color: black;
+            text-shadow: none;
+        }
+
+        .status-bar {
+            border-top: 1px solid var(--term-green);
+            padding-top: 10px;
+            margin-top: 50px;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de carga simulada -->
+    <div class="loading-screen">
+        <div style="width: 300px;">
+            <p>BIOS DATE 01/01/72 14:22:54 VER 1.02</p>
+            <p>CPU: BELL LABS PDP-11 @ 4.77 MHZ</p>
+            <p>64KB RAM SYSTEM TOTAL</p>
+            <p class="loading-text">LOADING KERNEL</p>
+            <br>
+            <p>[OK] LOADING STDIO.H</p>
+            <p>[OK] LOADING MEMORY MANAGERS</p>
+            <p>[OK] POINTERS INITIALIZED</p>
+        </div>
+    </div>
+
+    <div class="crt-overlay"></div>
+
+    <div class="terminal-container">
+        <h1>LENGUAJE DE PROGRAMACIÓN C</h1>
+        <div style="text-align: center; margin-bottom: 30px;">
+            <small>VOL 1.0 - KERNIGHAN & RITCHIE STYLE</small>
+        </div>
+
+        <h2>01. INTRODUCCIÓN ::</h2>
+        <p>
+            C es un lenguaje de programación de propósito general originalmente desarrollado por <span style="font-weight:bold;">Dennis Ritchie</span> entre 1969 y 1972 en los Laboratorios Bell. 
+        </p>
+        <p>
+            Es conocido por su eficiencia y es el lenguaje base de muchos sistemas operativos modernos, incluyendo UNIX, Linux y Windows. C proporciona acceso de bajo nivel a la memoria mediante el uso de punteros, lo que lo hace ideal para la programación de sistemas.
+        </p>
+
+        <h2>02. ESTRUCTURA BÁSICA ::</h2>
+        <p>Todo programa en C debe tener una función principal llamada <span style="background:var(--term-green); color:black; padding:0 4px;">main</span>. Desde aquí comienza la ejecución.</p>
+
+        <div class="code-block">
+/* hello_world.c */
+#include &lt;stdio.h&gt;
+
+<span class="comment">// Función principal</span>
+int main() {
+    <span class="comment">// Imprime en consola</span>
+    printf("Hola, Mundo Digital.\n");
+    
+    <span class="comment">// Retorna éxito al SO</span>
+    return 0;
+}
+        </div>
+
+        <h2>03. CARACTERÍSTICAS ::</h2>
+        <ul>
+            <li>SIMPLICIDAD: Un conjunto reducido de palabras clave.</li>
+            <li>PORTABILIDAD: El código puede compilarse en diversas arquitecturas.</li>
+            <li>PUNTEROS: Acceso directo a direcciones de memoria.</li>
+            <li>VELOCIDAD: Genera código máquina altamente optimizado.</li>
+        </ul>
+
+        <h2>04. GESTIÓN DE MEMORIA ::</h2>
+        <p>
+            A diferencia de lenguajes modernos con Garbage Collectors, en C el programador es responsable de la memoria.
+        </p>
+        <div class="code-block">
+int *ptr;
+ptr = (int*) malloc(sizeof(int)); <span class="comment">// Asignar memoria</span>
+
+if (ptr == NULL) {
+    printf("Error de memoria.\n");
+} else {
+    *ptr = 42;
+    free(ptr); <span class="comment">// Liberar memoria (CRÍTICO)</span>
+}
+        </div>
+
+        <div class="status-bar">
+            <span>MEM: 64KB OK</span>
+            <span>LINE: 102</span>
+            <span>COL: 01</span>
+            <span><span class="cursor"></span></span>
+        </div>
+    </div>
+
+</body>
+</html>
+
